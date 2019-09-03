@@ -1,8 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var mongoose = require('mongoose')
-var Users = require('../models/model.users')
-const jwt = require('jsonwebtoken')
+var Content = require('../models/model.content')
 
 let url = 'mongodb://127.0.0.1:27017/dumall'
 mongoose.connect(url, {useNewUrlParser: true}, (err, db) => {
@@ -11,13 +10,13 @@ mongoose.connect(url, {useNewUrlParser: true}, (err, db) => {
 })
 
 router.get('/', (req, res, next) => {
-  console.log('eeeeee')
+  console.log('content')
 })
 /**
- * 用户注册
+ * 创建文档
  */
-router.post('/register', (req, res, next) => {
-  const newUser = new Users({
+router.post('/articles', (req, res, next) => {
+  const articles = new Content({
     userName: req.body.userName,
     password: req.body.password
   })
