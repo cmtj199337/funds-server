@@ -4,7 +4,8 @@ var Schema = mongoose.Schema
 var contentSchema = new Schema({
   'contentId': String,
   'title': String,
-  'intro': String
+  'intro': String,
+  'catalogId': String
 }, { 
   versionKey: false,
   timestamps: true

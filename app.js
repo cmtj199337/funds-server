@@ -11,6 +11,7 @@ var ejs = require('ejs')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var contentRouter = require('./routes/content');
+var settingRouter = require('./routes/setting');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/content', contentRouter);
+app.use('/setting', settingRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -46,23 +48,18 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
+})
 
-// app.use(function (req, res, next) {
-//   // 登陆和注册不需要token，其他的请求都需要进行token校验 
-//   if (req.url != '/user/login' && req.url != '/user/register') {
-//       let token = req.headers.token;
-//       let jwt = new JwtUtil(token);
-//       let result = jwt.verifyToken();
-//       // 如果考验通过就next，否则就返回登陆信息不正确
-//       if (result == 'err') {
-//           res.send({status: 403, msg: '登录已过期, 请重新登录'})
-//       } else {
-//           next();
-//       }
-//   } else {
-//       next();
-//   }
-// });
+app.use(function (req, res, next) {
+  // 登陆和注册不需要token，其他的请求都需要进行token校验 
+  if (req.url != '/user/login' && req.url != '/user/register') {
+    let token = req.headers.token;
+    jwt.verify(token, 'funds', (err, decode) => {
+      // 如果考验通过就next，否则就返回登陆信息不正确
+      if (err) res.send({status: 403, msg: '登录已过期, 请重新登录'})
+      else next()
+    })
+  } else next()
+})
 
 module.exports = app;
