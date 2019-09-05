@@ -5,7 +5,10 @@ var contentSchema = new Schema({
   'contentId': String,
   'title': String,
   'intro': String,
-  'catalogId': String
+  'catalog': {
+    type: Schema.Types.ObjectId,
+    ref: 'Catalog'
+  }
 }, { 
   versionKey: false,
   timestamps: true

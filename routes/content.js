@@ -8,7 +8,7 @@ router.post('/articles', (req, res, next) => {
   const articles = new Content({
     title: req.body.title,
     intro: req.body.intro,
-    catalogId: req.body.catalogId
+    catalog: req.body.catalogId
   })
   Content.find({}, (err, doc) => {
     if (err) res.json({ code: 0, msg: res.message })
@@ -39,10 +39,25 @@ router.get('/articles', (req, res, next) => {
   if (pageSize < 1) pageSize = 1
   Content.find({}, (err, doc) => {
     if (err) return res.json({ code: 0, msg: res.message })
-    Content.find({...mp}).skip((pageSize - 1) * limit).limit(limit).exec((err, docs) => {
-      if (err) return res.json({ code: 0, msg: res.message })
-      return res.json({ code: 1, total: doc.length, datas: docs })
+    Content.find({...mp})
+      .populate('catalog')
+      .skip((pageSize - 1) * limit)
+      .limit(limit)
+      .exec((err, docs) => {
+        if (err) return res.json({ code: 0, msg: res.message })
+        return res.json({ code: 1, total: doc.length, datas: docs })
     })
+  })
+})
+
+// 删除
+router.delete('/articles/:id', (req, res, next) => {
+  let id = req.params.id
+  Content.findOneAndDelete(id, {$pull: {id: id}}, (err, doc) => {
+    if(err) {
+      return res.json({ code: 0, msg: res.message })
+    }
+    return res.json({ code: 1, msg: '删除成功' })
   })
 })
 
