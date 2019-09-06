@@ -61,4 +61,34 @@ router.delete('/articles/:id', (req, res, next) => {
   })
 })
 
+// 查询文章详情
+router.get('/articles/:id', (req, res, next) => {
+  let id = req.params.id
+  Content.findOne({_id: id}, (err, doc) => {
+    if (err) return res.json({ code: 0, msg: res.message })
+    return res.json({ code: 1, datas: doc })
+  })
+})
+
+// 更新文章
+
+router.put('/articles/:id', (req, res, next) => {
+  let id = req.params.id
+  let articles = {
+    title: req.body.title,
+    intro: req.body.intro,
+    catalog: req.body.catalogId
+  }
+  Content.findOneAndUpdate({_id: id}, articles, (err, doc) => {
+    if (err) return res.json({ code: 0, msg: res.message })
+    return res.json({ code: 1, msg: 'update success' })
+  })
+})
+
+
+
+
+
+
+
 module.exports = router
