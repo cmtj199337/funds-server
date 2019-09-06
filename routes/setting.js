@@ -23,15 +23,29 @@ router.post('/catalog', (req, res, next) => {
  * 目录列表
  */
 router.get('/catalog', (req, res, next) => {
-  let limit = parseInt(req.query.limit) || 10
-  let pageSize = parseInt(req.query.pageSize) || 1
-  if (pageSize < 1) pageSize = 1
   Catalog.find({}, (err, doc) => {
     if (err) return res.json({ code: 0, msg: res.message })
-    Catalog.find({}).skip((pageSize - 1) * limit).limit(limit).exec((err, docs) => {
-      if (err) return res.json({ code: 0, msg: res.message })
-      return res.json({ code: 1, total: doc.length, datas: docs })
-    })
+    return res.json({ code: 1, total: doc.length, datas: doc })
+  })
+})
+
+/**
+ * 更新目录
+ */
+router.put('/catalog/:id', (req, res, next) => {
+  Catalog.findOneAndUpdate({_id: req.params.id}, {name: req.body.name}, (err, doc) => {
+    if (err) return res.json({ code: 0, msg: res.message })
+    return res.json({ code: 1, msg: 'update success' })
+  })
+})
+
+/**
+ * remove
+ */
+router.delete('/catalog/:id', (req, res, next) => {
+  Catalog.findOneAndDelete(req.params.id, {$pull: {id: req.params.id}}, (err, doc) => {
+    if(err) return res.json({ code: 0, msg: res.message })
+    return res.json({ code: 1, msg: 'removed' })
   })
 })
 

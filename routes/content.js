@@ -54,9 +54,7 @@ router.get('/articles', (req, res, next) => {
 router.delete('/articles/:id', (req, res, next) => {
   let id = req.params.id
   Content.findOneAndDelete(id, {$pull: {id: id}}, (err, doc) => {
-    if(err) {
-      return res.json({ code: 0, msg: res.message })
-    }
+    if(err) return res.json({ code: 0, msg: res.message })
     return res.json({ code: 1, msg: '删除成功' })
   })
 })
